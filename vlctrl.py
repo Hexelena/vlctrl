@@ -7,20 +7,19 @@ from optparse import OptionParser
 
 
 class VlcTalker:
-    def __init__(self, verbose): 
+    def __init__(self): 
         self.session = dbus.SessionBus()
         self.vlc_dbus_obj = None
         try:
             self.vlc_dbus_obj = self.session.get_object('org.mpris.MediaPlayer2.vlc', '/org/mpris/MediaPlayer2')
         except dbus.exceptions.DBusException as dbex:
-            if verbose:
-                print(dbex.get_dbus_message())
-                if dbex.get_dbus_message() == 'The name org.mpris.MediaPlayer2.vlc was not provided by any .service files':
-                    print('--> the program is unable to find a running vlc instance in the dbus interface')
-                else:
-                    print('--> an unknown error occured. Try to run the following command in you command line to test ' + 
-                        'if vlc control via dbus is working (it should pause current playback):\n\n\t{}\n'.format(
-                        'dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause'))
+            print(dbex.get_dbus_message())
+            if dbex.get_dbus_message() == 'The name org.mpris.MediaPlayer2.vlc was not provided by any .service files':
+                print('--> the program is unable to find a running vlc instance in the dbus interface')
+            else:
+                print('--> an unknown error occured. Try to run the following command in you command line to test ' + 
+                    'if vlc control via dbus is working (it should pause current playback):\n\n\t{}\n'.format(
+                    'dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause'))
                 
 
     def get_playstate(self):
@@ -59,8 +58,6 @@ class VlcTalker:
 
 
 
-
-
 if __name__ == '__main__':
     parser = OptionParser(usage='usage: %prog [options] ', version='0.2', description="vlc mediakey remote")  
     parser.add_option('-l', '--play', action='store_true', help='tell vlc to start playback', dest='play', default=False)
@@ -69,14 +66,13 @@ if __name__ == '__main__':
     parser.add_option('-s', '--stop', action='store_true', help='tell vlc to stop playback', dest='stop', default=False)
     parser.add_option('-n', '--next', action='store_true', help='tell vlc to play the next track', dest='next', default=False)
     parser.add_option('-p', '--prev', action='store_true', help='tell vlc to play the previous track', dest='previous', default=False)
-    parser.add_option('-v', '--verbose', action='store_true', help='print error messages about problems with the interface.', dest='verbose', default=False)
 
     (options, args) = parser.parse_args()
 
     if args=='none':
         parser.print_help()
 
-    vlct = VlcTalker(options.verbose)
+    vlct = VlcTalker()
     # only run the following commands if the initialization was succesful
     if vlct.vlc_dbus_obj:
         if options.play:
