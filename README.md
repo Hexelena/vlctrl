@@ -25,7 +25,7 @@ Then just run the script with the necessary flags:
 Now you can create a new keyboard shortcut with the command of `/path/to/script/vlctrl.py -q -t` to toggle playback and map it to your play button.
 
 ## I don't use vlc, can i still use the script?
-Download a D-Bus debugger (e.g. `d-feet`) and search for your media player under `'org.mpris.MediaPlayer.yourplayername'`.
+Download a D-Bus debugger (e.g. `d-feet`) and search the Session Bus for your media player under `'org.mpris.MediaPlayer.yourplayername'`.
 Change the initialization in [vlctrl.py line 14](vlctrl.py#L14) to the media player of your choice.  
 Most other players support the `'org.mpris.MediaPlayer2.Player'` interface so that should make it work.  
 If you run into problems just open an issue.
